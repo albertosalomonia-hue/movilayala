@@ -86,7 +86,7 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <div className="space-y-2">
-            {ultimosRegistros.map((r) => (
+            {ultimosRegistros.map((r: (typeof ultimosRegistros)[number]) => (
               <Link
                 key={r.id}
                 href={`/dashboard/historial/${r.id}`}
