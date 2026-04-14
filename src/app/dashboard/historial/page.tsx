@@ -28,7 +28,7 @@ export default async function HistorialPage() {
         </div>
       ) : (
         <div className="space-y-2">
-          {registros.map((r) => (
+          {registros.map((r: (typeof registros)[number]) => (
             <Link
               key={r.id}
               href={`/dashboard/historial/${r.id}`}
