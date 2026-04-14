@@ -1,0 +1,68 @@
+
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model daily_logs {
+  id            Int                @id @default(autoincrement())
+  user_dni      String?            @db.VarChar(50)
+  date          String?            @db.VarChar(255)
+  mileage_start String?            @db.VarChar(50)
+  fuel_start    String?            @db.VarChar(50)
+  photo_start   String?            @db.LongText
+  time_start    String?            @db.VarChar(50)
+  mileage_end   String?            @db.VarChar(50)
+  fuel_end      String?            @db.VarChar(50)
+  photo_end     String?            @db.LongText
+  time_end      String?            @db.VarChar(50)
+  distance      String?            @db.VarChar(50)
+  status        daily_logs_status? @default(started)
+  created_at    DateTime?          @default(now()) @db.Timestamp(0)
+  users         users?             @relation(fields: [user_dni], references: [dni], onDelete: Cascade, onUpdate: NoAction, map: "fk_daily_logs_user")
+
+  @@index([created_at(sort: Desc)], map: "idx_daily_logs_created_at")
+  @@index([status], map: "idx_daily_logs_status")
+  @@index([user_dni], map: "idx_daily_logs_user_dni")
+  @@index([user_dni, status], map: "idx_daily_logs_user_status")
+}
+
+model tasks {
+  id         String    @id @db.VarChar(255)
+  user_dni   String?   @db.VarChar(50)
+  title      String?   @db.VarChar(255)
+  completed  Boolean?  @default(false)
+  category   String?   @db.VarChar(100)
+  time       String?   @db.VarChar(100)
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+  users      users?    @relation(fields: [user_dni], references: [dni], onDelete: Cascade, onUpdate: NoAction, map: "fk_tasks_user")
+
+  @@index([completed], map: "idx_tasks_completed")
+  @@index([created_at], map: "idx_tasks_created_at")
+  @@index([user_dni], map: "idx_tasks_user_dni")
+}
+
+model users {
+  id         Int          @id @default(autoincrement())
+  dni        String       @unique(map: "dni") @db.VarChar(50)
+  password   String       @db.VarChar(255)
+  name       String?      @db.VarChar(255)
+  role       users_role?  @default(user)
+  created_at DateTime?    @default(now()) @db.Timestamp(0)
+  daily_logs daily_logs[]
+  tasks      tasks[]
+}
+
+enum users_role {
+  admin
+  user
+}
+
+enum daily_logs_status {
+  started
+  ended
+}
