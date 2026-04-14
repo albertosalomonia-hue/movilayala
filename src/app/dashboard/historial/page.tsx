@@ -1,12 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
 import Link from "next/link";
-
-type RegistroConUser = Prisma.daily_logsGetPayload<{
-  include: { users: { select: { name: true; dni: true } } };
-}>;
 
 export default async function HistorialPage() {
   const session = await getServerSession(authOptions);
@@ -33,7 +28,7 @@ export default async function HistorialPage() {
         </div>
       ) : (
         <div className="space-y-2">
-          {(registros as RegistroConUser[]).map((r) => (
+          {registros.map((r) => (
             <Link
               key={r.id}
               href={`/dashboard/historial/${r.id}`}
