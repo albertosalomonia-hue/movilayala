@@ -1,10 +1,12 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import type { daily_logs, users } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import Link from "next/link";
 
-type RegistroConUser = daily_logs & { users: Pick<users, "name" | "dni"> | null };
+type RegistroConUser = Prisma.daily_logsGetPayload<{
+  include: { users: { select: { name: true; dni: true } } };
+}>;
 
 export default async function HistorialPage() {
   const session = await getServerSession(authOptions);
