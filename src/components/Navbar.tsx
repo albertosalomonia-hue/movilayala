@@ -7,11 +7,13 @@ import { usePathname } from "next/navigation";
 export default function Navbar() {
   const { data: session } = useSession();
   const pathname = usePathname();
+  const isAdmin = session?.user?.role === "admin";
 
   const links = [
     { href: "/dashboard", label: "Inicio", icon: "🏠" },
     { href: "/dashboard/nuevo", label: "Nuevo", icon: "➕" },
     { href: "/dashboard/historial", label: "Historial", icon: "📋" },
+    ...(isAdmin ? [{ href: "/dashboard/admin", label: "Usuarios", icon: "👥" }] : []),
   ];
 
   return (
@@ -21,6 +23,9 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <span className="text-xl">🚛</span>
           <span className="font-bold text-base">MovilAyala</span>
+          {isAdmin && (
+            <span className="text-xs bg-blue-700 px-2 py-0.5 rounded-full text-blue-200">Admin</span>
+          )}
         </div>
         <div className="flex items-center gap-3">
           <span className="text-sm text-blue-200">{session?.user?.name ?? session?.user?.dni}</span>
