@@ -66,7 +66,6 @@ export default function ImageCapture({ label, value, onChange }: ImageCapturePro
         ref={fileRef}
         type="file"
         accept="image/*"
-        capture="environment"
         className="hidden"
         onChange={handleFile}
       />
